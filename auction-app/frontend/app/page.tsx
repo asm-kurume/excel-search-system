@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const [items, setItems] = useState<any[]>([]);
   const [search, setSearch] = useState("");
+  const [makerSearch, setMakerSearch] = useState("");
+const [sizeSearch, setSizeSearch] = useState("");
 
   useEffect(() => {
     fetch("/items.csv")
@@ -32,11 +34,24 @@ export default function Home() {
       });
   }, []);
 
-  const filteredItems = items.filter((item) =>
-  `${item.title} ${item.code} ${item.maker} ${item.size}`
-    .toLowerCase()
-    .includes(search.toLowerCase())
-);
+  const filteredItems = items.filter((item) => {
+  const freeWord =
+    `${item.title} ${item.code}`
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+  const makerMatch =
+    item.maker
+      ?.toLowerCase()
+      .includes(makerSearch.toLowerCase());
+
+  const sizeMatch =
+    item.size
+      ?.toLowerCase()
+      .includes(sizeSearch.toLowerCase());
+
+  return freeWord && makerMatch && sizeMatch;
+});
 
 
   return (
@@ -46,14 +61,29 @@ export default function Home() {
       </h1>
 
       <input
-        type="text"
-        placeholder="検索..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="border p-3 rounded w-full max-w-xl mb-6"
-      />
+  type="text"
+  placeholder="検索..."
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+  className="border p-3 rounded w-full max-w-xl mb-4"
+/>
 
-      <div className="grid gap-4">
+<input
+  type="text"
+  placeholder="メーカー検索"
+  value={makerSearch}
+  onChange={(e) => setMakerSearch(e.target.value)}
+  className="border p-3 rounded w-full max-w-xl mb-4"
+/>
+
+<input
+  type="text"
+  placeholder="サイズ検索"
+  value={sizeSearch}
+  onChange={(e) => setSizeSearch(e.target.value)}
+  className="border p-3 rounded w-full max-w-xl mb-6"
+/>
+       <div className="grid gap-4">
         {filteredItems.map((item) => (
           <div
             key={item.id}
@@ -73,10 +103,9 @@ export default function Home() {
 
             <p>
               {item.year}年 / {item.week}週
-          
             </p>
+
             <p>本数: {item.amount}</p>
-            
           </div>
         ))}
       </div>
