@@ -8,31 +8,44 @@ export default function Home() {
   const [makerSearch, setMakerSearch] = useState("");
 const [sizeSearch, setSizeSearch] = useState("");
 
-  useEffect(() => {
-   fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRnjK9XVUtz7a5RiTlwBrguEAbqriPm1iu2XMl38UZCFIc8W0eXqPgIpKuN3ZvmuVRpPPyp_58_5cI0/pub?output=csv")
-      .then((res) => res.text())
-      .then((text) => {
-        const lines = text.split("\n");
+ useEffect(() => {
+  fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRnjK9XVUtz7a5RiTlwBrguEAbqriPm1iu2XMl38UZCFIc8W0eXqPgIpKuN3ZvmuVRpPPyp_58_5cI0/pub?output=csv")
+    .then((res) => res.text())
+    .then((text) => {
 
-        const data = lines.slice(1).map((line, index) => {
-          const cols = line.split(",");
+      const lines = text.trim().split("\n");
 
-          return {
-            id: index,
-            store: cols[0],
-            code: cols[1],
-            maker: cols[2],
-            title: cols[3],
-            size: cols[4],
-            week: cols[5],
-            year: cols[6],
-            amount: cols[7],
-          };
+      const headers = lines[0].trim().split(",");
+
+      const data = lines.slice(1).map((line, index) => {
+        const cols = line.trim().split(",");
+
+        const row: any = {};
+
+        headers.forEach((header, i) => {
+          row[header.trim()] = cols[i];
         });
 
-        setItems(data);
-      });
-  }, []);
+        return {
+        id: index,
+        store: row["store"],
+        code: row["code"],
+        maker: row["maker"],
+        title: row["title"],
+        size: row["size"],
+        week: row["week"],
+        year: row["year"],
+        amount: row["amount"],
+        price: row["price"]?.replace("\r", "").trim() || "",
+    };
+    });
+
+      console.log(data);
+
+      setItems(data);
+    });
+}, []);
+
 
   const filteredItems = items.filter((item) => {
   const freeWord =
@@ -106,6 +119,9 @@ const [sizeSearch, setSizeSearch] = useState("");
             </p>
 
             <p>本数: {item.amount}</p>
+           
+            <p>価格: {item.price || "未設定"}</p>
+
           </div>
         ))}
       </div>
