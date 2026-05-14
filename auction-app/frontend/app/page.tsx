@@ -9,7 +9,7 @@ export default function Home() {
 const [sizeSearch, setSizeSearch] = useState("");
 
   useEffect(() => {
-    fetch("/items.csv")
+   fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRnjK9XVUtz7a5RiTlwBrguEAbqriPm1iu2XMl38UZCFIc8W0eXqPgIpKuN3ZvmuVRpPPyp_58_5cI0/pub?output=csv")
       .then((res) => res.text())
       .then((text) => {
         const lines = text.split("\n");
