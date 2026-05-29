@@ -8,6 +8,8 @@ export default function Home() {
   const [makerSearch, setMakerSearch] = useState("");
 const [sizeSearch, setSizeSearch] = useState("");
 
+const [category, setCategory] = useState("タイヤ");
+
  useEffect(() => {
   fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRnjK9XVUtz7a5RiTlwBrguEAbqriPm1iu2XMl38UZCFIc8W0eXqPgIpKuN3ZvmuVRpPPyp_58_5cI0/pub?output=csv")
     .then((res) => res.text())
@@ -28,6 +30,7 @@ const [sizeSearch, setSizeSearch] = useState("");
 
         return {
         id: index,
+        category: row["category"],
         store: row["store"],
         code: row["code"],
         maker: row["maker"],
@@ -45,9 +48,21 @@ const [sizeSearch, setSizeSearch] = useState("");
       setItems(data);
     });
 }, []);
-const makers = [...new Set(items.map((item) => item.maker))];
+const makers = [
+  ...new Set(
+    items
+      .filter((item) => item.category === category)
+      .map((item) => item.maker)
+  ),
+];
 
-const sizes = [...new Set(items.map((item) => item.size))];
+const sizes = [
+  ...new Set(
+    items
+      .filter((item) => item.category === category)
+      .map((item) => item.size)
+  ),
+];
 
 const filteredItems = items.filter((item) => {
   const freeWord =
@@ -65,7 +80,10 @@ const filteredItems = items.filter((item) => {
       ?.toLowerCase()
       .includes(sizeSearch.toLowerCase());
 
-  return freeWord && makerMatch && sizeMatch;
+  const categoryMatch =
+  item.category === category;
+
+return freeWord && makerMatch && sizeMatch && categoryMatch;
 });
 
 
@@ -75,6 +93,14 @@ const filteredItems = items.filter((item) => {
         商品検索システム
       </h1>
 
+<select
+  value={category}
+  onChange={(e) => setCategory(e.target.value)}
+  className="border p-3 rounded w-full max-w-xl mb-4"
+>
+  <option value="タイヤ">タイヤ</option>
+  <option value="ナビ">ナビ</option>
+</select>
      
 
 <select
