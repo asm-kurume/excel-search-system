@@ -48,10 +48,25 @@ const [category, setCategory] = useState("タイヤ");
       setItems(data);
     });
 }, []);
-const makers = [...new Set(items.map((item) => item.maker))];
+const makers = [
+  ...new Set(
+    items
+      .filter((item) =>
+        item.category?.includes(category)
+      )
+      .map((item) => item.maker)
+  ),
+];
 
-const sizes = [...new Set(items.map((item) => item.size))];
-
+const sizes = [
+  ...new Set(
+    items
+      .filter((item) =>
+        item.category?.includes(category)
+      )
+      .map((item) => item.size)
+  ),
+];
 const filteredItems = items.filter((item) => {
   const freeWord =
     `${item.title} ${item.code}`
@@ -69,9 +84,8 @@ const filteredItems = items.filter((item) => {
       .includes(sizeSearch.toLowerCase());
 
   const categoryMatch =
-  item.category
-    ?.replace("\r", "")
-    .trim() === category;
+  !item.category ||
+  item.category.includes(category);
 
 return freeWord && makerMatch && sizeMatch && categoryMatch;
 });
