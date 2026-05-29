@@ -29,18 +29,18 @@ const [category, setCategory] = useState("タイヤ");
         });
 
         return {
-        id: index,
-        category: row["category"],
-        store: row["store"],
-        code: row["code"],
-        maker: row["maker"],
-        title: row["title"],
-        size: row["size"],
-        week: row["week"],
-        year: row["year"],
-        amount: row["amount"],
-        price: row["price"]?.replace("\r", "").trim() || "",
-    };
+  id: index,
+  category: row["category"]?.replace("\r", "").trim(),
+  store: row["store"],
+  code: row["code"],
+  maker: row["maker"],
+  title: row["title"],
+  size: row["size"],
+  week: row["week"],
+  year: row["year"],
+  amount: row["amount"],
+  price: row["price"]?.replace("\r", "").trim() || "",
+};
     });
 
       console.log(data);
