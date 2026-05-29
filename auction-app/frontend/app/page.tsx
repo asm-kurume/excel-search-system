@@ -69,7 +69,9 @@ const filteredItems = items.filter((item) => {
       .includes(sizeSearch.toLowerCase());
 
   const categoryMatch =
-  item.category === category;
+  item.category
+    ?.replace("\r", "")
+    .trim() === category;
 
 return freeWord && makerMatch && sizeMatch && categoryMatch;
 });
