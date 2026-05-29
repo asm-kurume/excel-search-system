@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Papa from "papaparse";
 
 export default function Home() {
   const [items, setItems] = useState<any[]>([]);
@@ -11,60 +12,101 @@ const [sizeSearch, setSizeSearch] = useState("");
 const [category, setCategory] = useState("タイヤ");
 
  useEffect(() => {
-  fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRnjK9XVUtz7a5RiTlwBrguEAbqriPm1iu2XMl38UZCFIc8W0eXqPgIpKuN3ZvmuVRpPPyp_58_5cI0/pub?output=csv")
+  fetch(
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRnjK9XVUtz7a5RiTlwBrguEAbqriPm1iu2XMl38UZCFIc8W0eXqPgIpKuN3ZvmuVRpPPyp_58_5cI0/pub?output=csv"
+  )
     .then((res) => res.text())
     .then((text) => {
 
-      const lines = text.trim().split("\n");
+      Papa.parse(text, {
+        header: true,
+        skipEmptyLines: true,
 
-      const headers = lines[0].trim().split(",");
+        complete: (results) => {
+          const data = (results.data as any[]).map(
+            (row: any, index: number) => ({
+              id: index,
 
-      const data = lines.slice(1).map((line, index) => {
-        const cols = line.trim().split(",");
+              category:
+                row["category"]
+                  ?.replace("\r", "")
+                  .trim(),
 
-        const row: any = {};
+              maker:
+                row["maker"]
+                  ?.replace("\r", "")
+                  .trim(),
 
-        headers.forEach((header, i) => {
-          row[header.trim()] = cols[i];
-        });
+              size:
+                row["size"]
+                  ?.replace("\r", "")
+                  .trim(),
 
-        return {
-  id: index,
-  category: row["category"]?.replace("\r", "").trim(),
-  store: row["store"],
-  code: row["code"],
-  maker: row["maker"],
-  title: row["title"],
-  size: row["size"],
-  week: row["week"],
-  year: row["year"],
-  amount: row["amount"],
-  price: row["price"]?.replace("\r", "").trim() || "",
-};
-    });
+              title:
+                row["title"]
+                  ?.replace("\r", "")
+                  .trim(),
 
-      console.log(data);
+              code:
+                row["code"]
+                  ?.replace("\r", "")
+                  .trim(),
 
-      setItems(data);
+              store:
+                row["store"]
+                  ?.replace("\r", "")
+                  .trim(),
+
+              week:
+                row["week"]
+                  ?.replace("\r", "")
+                  .trim(),
+
+              year:
+                row["year"]
+                  ?.replace("\r", "")
+                  .trim(),
+
+              amount:
+                row["amount"]
+                  ?.replace("\r", "")
+                  .trim(),
+
+              price:
+                row["price"]
+                  ?.replace("\r", "")
+                  .trim() || "",
+            })
+          );
+
+          console.log(data);
+
+          setItems(data);
+        },
+      });
+
     });
 }, []);
 const makers = [
   ...new Set(
     items
-      .filter((item) =>
-        item.category?.includes(category)
-      )
-      .map((item) => item.maker)
+      .filter(
+  (item) =>
+    item.category?.trim() === category
+)
+
+      .map((item) => item.maker?.trim())
   ),
 ];
 
 const sizes = [
   ...new Set(
     items
-      .filter((item) =>
-        item.category?.includes(category)
+      .filter(
+        (item) =>
+          item.category?.trim() === category
       )
-      .map((item) => item.size)
+      .map((item) => item.size?.trim())
   ),
 ];
 const filteredItems = items.filter((item) => {
@@ -74,18 +116,19 @@ const filteredItems = items.filter((item) => {
       .includes(search.toLowerCase());
 
   const makerMatch =
-    item.maker
-      ?.toLowerCase()
-      .includes(makerSearch.toLowerCase());
+  !makerSearch ||
+  item.maker
+    ?.toLowerCase()
+    .includes(makerSearch.toLowerCase());
 
   const sizeMatch =
-    item.size
-      ?.toLowerCase()
-      .includes(sizeSearch.toLowerCase());
+  !sizeSearch ||
+  item.size
+    ?.toLowerCase()
+    .includes(sizeSearch.toLowerCase());
 
   const categoryMatch =
-  !item.category ||
-  item.category.includes(category);
+  item.category?.trim() === category;
 
 return freeWord && makerMatch && sizeMatch && categoryMatch;
 });
