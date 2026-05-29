@@ -48,21 +48,9 @@ const [category, setCategory] = useState("タイヤ");
       setItems(data);
     });
 }, []);
-const makers = [
-  ...new Set(
-    items
-      .filter((item) => item.category === category)
-      .map((item) => item.maker)
-  ),
-];
+const makers = [...new Set(items.map((item) => item.maker))];
 
-const sizes = [
-  ...new Set(
-    items
-      .filter((item) => item.category === category)
-      .map((item) => item.size)
-  ),
-];
+const sizes = [...new Set(items.map((item) => item.size))];
 
 const filteredItems = items.filter((item) => {
   const freeWord =
