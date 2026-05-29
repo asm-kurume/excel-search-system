@@ -45,9 +45,11 @@ const [sizeSearch, setSizeSearch] = useState("");
       setItems(data);
     });
 }, []);
+const makers = [...new Set(items.map((item) => item.maker))];
 
+const sizes = [...new Set(items.map((item) => item.size))];
 
-  const filteredItems = items.filter((item) => {
+const filteredItems = items.filter((item) => {
   const freeWord =
     `${item.title} ${item.code}`
       .toLowerCase()
@@ -73,7 +75,23 @@ const [sizeSearch, setSizeSearch] = useState("");
         商品検索システム
       </h1>
 
-      <input
+     
+
+<select
+  value={sizeSearch}
+  onChange={(e) => setSizeSearch(e.target.value)}
+  className="border p-3 rounded w-full max-w-xl mb-6"
+>
+  <option value="">サイズ選択</option>
+
+  {sizes.map((size) => (
+    <option key={size} value={size}>
+      {size}
+    </option>
+  ))}
+</select>
+
+<input
   type="text"
   placeholder="検索..."
   value={search}
@@ -81,21 +99,22 @@ const [sizeSearch, setSizeSearch] = useState("");
   className="border p-3 rounded w-full max-w-xl mb-4"
 />
 
-<input
-  type="text"
-  placeholder="メーカー検索"
+<select
   value={makerSearch}
   onChange={(e) => setMakerSearch(e.target.value)}
   className="border p-3 rounded w-full max-w-xl mb-4"
-/>
+>
+  <option value="">メーカー選択</option>
 
-<input
-  type="text"
-  placeholder="サイズ検索"
-  value={sizeSearch}
-  onChange={(e) => setSizeSearch(e.target.value)}
-  className="border p-3 rounded w-full max-w-xl mb-6"
-/>
+  {makers.map((maker) => (
+    <option key={maker} value={maker}>
+      {maker}
+    </option>
+  ))}
+</select>
+ 
+
+
        <div className="grid gap-4">
         {filteredItems.map((item) => (
           <div
