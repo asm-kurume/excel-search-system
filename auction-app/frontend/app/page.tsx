@@ -1,222 +1,188 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Papa from "papaparse";
 
+type Item = {
+  category: string;
+  store: string;
+  code: string;
+  maker: string;
+  title: string;
+  size: string;
+  week: string;
+  year: string;
+  amount: string;
+  price: string;
+};
+
 export default function Home() {
-  const [items, setItems] = useState<any[]>([]);
-  const [search, setSearch] = useState("");
-  const [makerSearch, setMakerSearch] = useState("");
-const [sizeSearch, setSizeSearch] = useState("");
+  const [items, setItems] = useState<Item[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedMaker, setSelectedMaker] = useState("");
 
-const [category, setCategory] = useState("タイヤ");
-
- useEffect(() => {
-  fetch(
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRnjK9XVUtz7a5RiTlwBrguEAbqriPm1iu2XMl38UZCFIc8W0eXqPgIpKuN3ZvmuVRpPPyp_58_5cI0/pub?output=csv"
-  )
-    .then((res) => res.text())
-    .then((text) => {
-
-      Papa.parse(text, {
-        header: true,
-        skipEmptyLines: true,
-
-        complete: (results) => {
-          const data = (results.data as any[]).map(
-            (row: any, index: number) => ({
-              id: index,
-
-              category:
-                row["category"]
-                  ?.replace("\r", "")
-                  .trim(),
-
-              maker:
-                row["maker"]
-                  ?.replace("\r", "")
-                  .trim(),
-
-              size:
-                row["size"]
-                  ?.replace("\r", "")
-                  .trim(),
-
-              title:
-                row["title"]
-                  ?.replace("\r", "")
-                  .trim(),
-
-              code:
-                row["code"]
-                  ?.replace("\r", "")
-                  .trim(),
-
-              store:
-                row["store"]
-                  ?.replace("\r", "")
-                  .trim(),
-
-              week:
-                row["week"]
-                  ?.replace("\r", "")
-                  .trim(),
-
-              year:
-                row["year"]
-                  ?.replace("\r", "")
-                  .trim(),
-
-              amount:
-                row["amount"]
-                  ?.replace("\r", "")
-                  .trim(),
-
-              price:
-                row["price"]
-                  ?.replace("\r", "")
-                  .trim() || "",
-            })
-          );
-
-          console.log(data);
-
-          setItems(data);
-        },
+  // CSV 読み込み
+  useEffect(() => {
+    fetch(
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vRnjK9XVUtz7a5RiTlwBrguEAbqriPm1iu2XMl38UZCFIc8W0eXqPgIpKuN3ZvmuVRpPPyp_58_5cI0/pub?output=csv"
+    )
+      .then((res) => res.text())
+      .then((text) => {
+        Papa.parse<Item>(text, {
+          header: true,
+          skipEmptyLines: true,
+          complete: (results) => {
+            console.log("parsed first 3 rows:", results.data.slice(0, 3));
+            setItems(results.data);
+          },
+        });
       });
+  }, []);
 
+  // カテゴリ候補
+  const categories = useMemo(() => {
+    const set = new Set<string>();
+    items.forEach((item) => {
+      const v = item.category?.toString().trim();
+      if (v) set.add(v);
     });
-}, []);
-const makers = [
-  ...new Set(
-    items
-      .filter(
-  (item) =>
-    item.category?.trim() === category
-)
+    const result = Array.from(set);
+    console.log("categories options:", result);
+    return result;
+  }, [items]);
 
-      .map((item) => item.maker?.trim())
-  ),
-];
+  // サイズ候補
+ const sizes = useMemo(() => {
+  const set = new Set<string>();
 
-const sizes = [
-  ...new Set(
-    items
-      .filter(
-        (item) =>
-          item.category?.trim() === category
-      )
-      .map((item) => item.size?.trim())
-  ),
-];
-const filteredItems = items.filter((item) => {
-  const freeWord =
-    `${item.title} ${item.code}`
-      .toLowerCase()
-      .includes(search.toLowerCase());
+  items
+    .filter(
+      (item) =>
+        !selectedCategory ||
+        item.category === selectedCategory
+    )
+    .forEach((item) => {
+      const v = item.size?.toString().trim();
+      if (v) set.add(v);
+    });
 
-  const makerMatch =
-  !makerSearch ||
-  item.maker
-    ?.toLowerCase()
-    .includes(makerSearch.toLowerCase());
+  return Array.from(set);
+}, [items, selectedCategory]);
 
-  const sizeMatch =
-  !sizeSearch ||
-  item.size
-    ?.toLowerCase()
-    .includes(sizeSearch.toLowerCase());
+  // メーカー候補
+  const makers = useMemo(() => {
+  const set = new Set<string>();
 
-  const categoryMatch =
-  item.category?.trim() === category;
+  items
+    .filter(
+      (item) =>
+        !selectedCategory ||
+        item.category === selectedCategory
+    )
+    .forEach((item) => {
+      const v = item.maker?.toString().trim();
+      if (v) set.add(v);
+    });
 
-return freeWord && makerMatch && sizeMatch && categoryMatch;
-});
+  return Array.from(set);
+}, [items, selectedCategory]);
 
+  // 絞り込み
+  const filteredItems = useMemo(() => {
+    return items.filter((item) => {
+      if (selectedCategory && item.category !== selectedCategory) return false;
+      if (selectedSize && item.size !== selectedSize) return false;
+      if (selectedMaker && item.maker !== selectedMaker) return false;
+      return true;
+    });
+  }, [items, selectedCategory, selectedSize, selectedMaker]);
 
   return (
-    <main className="p-10">
-      <h1 className="text-3xl font-bold mb-6">
-        商品検索システム
-      </h1>
+    <main>
+      <h1>在庫検索</h1>
 
-<select
-  value={category}
-  onChange={(e) => setCategory(e.target.value)}
-  className="border p-3 rounded w-full max-w-xl mb-4"
->
-  <option value="タイヤ">タイヤ</option>
-  <option value="ナビ">ナビ</option>
-</select>
-     
-
-<select
-  value={sizeSearch}
-  onChange={(e) => setSizeSearch(e.target.value)}
-  className="border p-3 rounded w-full max-w-xl mb-6"
->
-  <option value="">サイズ選択</option>
-
-  {sizes.map((size) => (
-    <option key={size} value={size}>
-      {size}
-    </option>
-  ))}
-</select>
-
-<input
-  type="text"
-  placeholder="検索..."
-  value={search}
-  onChange={(e) => setSearch(e.target.value)}
-  className="border p-3 rounded w-full max-w-xl mb-4"
-/>
-
-<select
-  value={makerSearch}
-  onChange={(e) => setMakerSearch(e.target.value)}
-  className="border p-3 rounded w-full max-w-xl mb-4"
->
-  <option value="">メーカー選択</option>
-
-  {makers.map((maker) => (
-    <option key={maker} value={maker}>
-      {maker}
-    </option>
-  ))}
-</select>
- 
-
-
-       <div className="grid gap-4">
-        {filteredItems.map((item) => (
-          <div
-            key={item.id}
-            className="border p-4 rounded shadow"
+      <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
+        <label>
+          カテゴリ:
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
           >
-            <h2 className="text-xl font-bold">
-              {item.title}
-            </h2>
+            <option value="">すべて</option>
+            {categories.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </label>
 
-            <p>商品コード: {item.code}</p>
+        <label>
+          サイズ:
+          <select
+            value={selectedSize}
+            onChange={(e) => setSelectedSize(e.target.value)}
+          >
+            <option value="">すべて</option>
+            {sizes.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        </label>
 
-            <p>メーカー: {item.maker}</p>
-
-            <p>サイズ: {item.size}</p>
-
-            <p>店舗: {item.store}</p>
-
-            <p>
-              {item.year}年 / {item.week}週
-            </p>
-
-            <p>本数: {item.amount}</p>
-           
-            <p>価格: {item.price || "未設定"}</p>
-
-          </div>
-        ))}
+        <label>
+          メーカー:
+          <select
+            value={selectedMaker}
+            onChange={(e) => setSelectedMaker(e.target.value)}
+          >
+            <option value="">すべて</option>
+            {makers.map((m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
+
+      <p>該当件数: {filteredItems.length}</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>カテゴリ</th>
+            <th>サイズ</th>
+            <th>メーカー</th>
+            <th>店舗</th>
+            <th>コード</th>
+            <th>商品名</th>
+            <th>週</th>
+            <th>年</th>
+            <th>在庫数</th>
+            <th>価格</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredItems.map((item, i) => (
+            <tr key={i}>
+              <td>{item.category}</td>
+              <td>{item.size}</td>
+              <td>{item.maker}</td>
+              <td>{item.store}</td>
+              <td>{item.code}</td>
+              <td>{item.title}</td>
+              <td>{item.week}</td>
+              <td>{item.year}</td>
+              <td>{item.amount}</td>
+              <td>{item.price}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </main>
   );
 }
