@@ -149,40 +149,55 @@ console.log("TEST");
         </label>
       </div>
 
-      <p>該当件数: {filteredItems.length}</p>
+      <p className="mb-4 font-bold">
+  該当件数: {filteredItems.length}件
+</p>
 
-      <table>
-        <thead>
-          <tr>
-            <th>カテゴリ</th>
-            <th>サイズ</th>
-            <th>メーカー</th>
-            <th>店舗</th>
-            <th>コード</th>
-            <th>商品名</th>
-            <th>週</th>
-            <th>年</th>
-            <th>在庫数</th>
-            <th>価格</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredItems.map((item, i) => (
-            <tr key={i}>
-              <td>{item.category}</td>
-              <td>{item.size}</td>
-              <td>{item.maker}</td>
-              <td>{item.store}</td>
-              <td>{item.code}</td>
-              <td>{item.title}</td>
-              <td>{item.week}</td>
-              <td>{item.year}</td>
-              <td>{item.amount}</td>
-              <td>{item.price}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+<div className="grid gap-4">
+  {filteredItems.map((item, i) => (
+    <div
+      key={i}
+      className="border rounded-xl shadow-md p-4 bg-white"
+    >
+      <h2 className="text-xl font-bold mb-3">
+        {item.title}
+      </h2>
+
+      <div className="space-y-1 text-sm">
+        <p>
+          <span className="font-bold">メーカー:</span>{" "}
+          {item.maker}
+        </p>
+
+        <p>
+          <span className="font-bold">サイズ:</span>{" "}
+          {item.size}
+        </p>
+
+        <p>
+          <span className="font-bold">店舗:</span>{" "}
+          {item.store}
+        </p>
+
+        <p>
+          <span className="font-bold">製造:</span>{" "}
+          {item.year}年 / {item.week}週
+        </p>
+
+        <p>
+          <span className="font-bold">在庫:</span>{" "}
+          {item.amount}本
+        </p>
+
+        <p className="text-lg font-bold text-red-600 mt-2">
+          {item.price
+            ? `¥${Number(item.price).toLocaleString()}`
+            : "価格未設定"}
+        </p>
+      </div>
+    </div>
+  ))}
+</div>
     </main>
   );
 }
