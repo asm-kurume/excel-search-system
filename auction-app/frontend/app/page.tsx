@@ -97,7 +97,7 @@ export default function Home() {
       return true;
     });
   }, [items, selectedCategory, selectedSize, selectedMaker]);
-
+console.log("TEST");
   return (
     <main>
       <h1>在庫検索</h1>
