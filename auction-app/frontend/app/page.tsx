@@ -110,7 +110,7 @@ console.log("TEST");
   value={selectedCategory}
   onChange={(e) => setSelectedCategory(e.target.value)}
 >
-          >
+          
             <option value="">すべて</option>
             {categories.map((c) => (
               <option key={c} value={c}>
@@ -127,7 +127,7 @@ console.log("TEST");
   value={selectedSize}
   onChange={(e) => setSelectedSize(e.target.value)}
 >
-          >
+          
             <option value="">すべて</option>
             {sizes.map((s) => (
               <option key={s} value={s}>
@@ -144,7 +144,7 @@ console.log("TEST");
   value={selectedMaker}
   onChange={(e) => setSelectedMaker(e.target.value)}
 >
-          >
+          
             <option value="">すべて</option>
             {makers.map((m) => (
               <option key={m} value={m}>
