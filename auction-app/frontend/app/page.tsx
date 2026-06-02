@@ -103,11 +103,13 @@ console.log("TEST");
       <h1>在庫検索</h1>
 
       <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
-        <label>
-          カテゴリ:
+        <label className="text-lg font-bold">
+  カテゴリ:
           <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
+  className="border rounded-lg px-4 py-3 text-lg"
+  value={selectedCategory}
+  onChange={(e) => setSelectedCategory(e.target.value)}
+>
           >
             <option value="">すべて</option>
             {categories.map((c) => (
@@ -118,11 +120,13 @@ console.log("TEST");
           </select>
         </label>
 
-        <label>
-          サイズ:
+        <label className="text-lg font-bold">
+  サイズ:
           <select
-            value={selectedSize}
-            onChange={(e) => setSelectedSize(e.target.value)}
+  className="border rounded-lg px-4 py-3 text-lg"
+  value={selectedSize}
+  onChange={(e) => setSelectedSize(e.target.value)}
+>
           >
             <option value="">すべて</option>
             {sizes.map((s) => (
@@ -133,11 +137,13 @@ console.log("TEST");
           </select>
         </label>
 
-        <label>
-          メーカー:
+        <label className="text-lg font-bold">
+  メーカー:
           <select
-            value={selectedMaker}
-            onChange={(e) => setSelectedMaker(e.target.value)}
+  className="border rounded-lg px-4 py-3 text-lg"
+  value={selectedMaker}
+  onChange={(e) => setSelectedMaker(e.target.value)}
+>
           >
             <option value="">すべて</option>
             {makers.map((m) => (
@@ -190,7 +196,9 @@ console.log("TEST");
   </p>
 
   <p className="text-lg font-bold text-red-600 mt-2">
-  {item.price || "価格未設定"}
+  {item.price
+    ? `1本価格 ¥${Number(item.price).toLocaleString()}`
+    : "価格未設定"}
 </p>
 </div>
     </div>
