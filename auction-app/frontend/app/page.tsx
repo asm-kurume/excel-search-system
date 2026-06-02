@@ -191,19 +191,31 @@ console.log("TEST");
   </p>
 
   <p>
-    <span className="font-bold">在庫:</span>
-    {item.amount}本
-  </p>
+  <span className="font-bold">在庫:</span>
+  {item.amount}
+  {item.category === "tire"
+    ? "本"
+    : item.category === "ホイール"
+    ? "本"
+    : item.category === "navi"
+    ? "台"
+    : item.category === "others"
+    ? "個"
+    : ""}
+</p>
 
- item.category === "tire"
-  ? "1本価格"
-  : item.category === "navi"
-  ? "1台価格"
-  : item.category === "others"
-  ? "1個価格"
-  : item.category === "ホイール"
-  ? "1本価格"
-  : "価格"
+ <p className="text-lg font-bold text-red-600 mt-2">
+  {item.category === "tire"
+    ? "1本価格"
+    : item.category === "navi"
+    ? "1台価格"
+    : item.category === "others"
+    ? "1個価格"
+    : item.category === "ホイール"
+    ? "1本価格"
+    : "価格"}
+  ：{item.price || "価格未設定"}
+</p>
 </div>
     </div>
   ))}
