@@ -195,11 +195,15 @@ console.log("TEST");
     {item.amount}本
   </p>
 
-  <p className="text-lg font-bold text-red-600 mt-2">
-  {item.price
-    ? `1本価格 ¥${Number(item.price).toLocaleString()}`
-    : "価格未設定"}
-</p>
+ item.category === "tire"
+  ? "1本価格"
+  : item.category === "navi"
+  ? "1台価格"
+  : item.category === "others"
+  ? "1個価格"
+  : item.category === "ホイール"
+  ? "1本価格"
+  : "価格"
 </div>
     </div>
   ))}
