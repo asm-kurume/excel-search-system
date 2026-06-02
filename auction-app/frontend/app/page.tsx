@@ -163,37 +163,36 @@ console.log("TEST");
         {item.title}
       </h2>
 
-      <div className="space-y-1 text-sm">
-        <p>
-          <span className="font-bold">メーカー:</span>{" "}
-          {item.maker}
-        </p>
+     <div className="space-y-1 text-sm">
+  <p>
+    <span className="font-bold">メーカー:</span>
+    {item.maker}
+  </p>
 
-        <p>
-          <span className="font-bold">サイズ:</span>{" "}
-          {item.size}
-        </p>
+  <p>
+    <span className="font-bold">サイズ:</span>
+    {item.size}
+  </p>
 
-        <p>
-          <span className="font-bold">店舗:</span>{" "}
-          {item.store}
-        </p>
+  <p>
+    <span className="font-bold">店舗:</span>
+    {item.store}
+  </p>
 
-        <p>
-          <span className="font-bold">製造:</span>{" "}
-          {item.year}年 / {item.week}週
-        </p>
+  <p>
+    <span className="font-bold">製造:</span>
+    {item.year}年 / {item.week}週
+  </p>
 
-        <p>
-          <span className="font-bold">在庫:</span>{" "}
-          {item.amount}本
-        </p>
+  <p>
+    <span className="font-bold">在庫:</span>
+    {item.amount}本
+  </p>
 
-        <p className="text-lg font-bold text-red-600 mt-2">
-          <p className="text-lg font-bold text-red-600 mt-2">
+  <p className="text-lg font-bold text-red-600 mt-2">
   {item.price || "価格未設定"}
-        </p>
-      </div>
+</p>
+</div>
     </div>
   ))}
 </div>
