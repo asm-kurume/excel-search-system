@@ -190,9 +190,8 @@ console.log("TEST");
         </p>
 
         <p className="text-lg font-bold text-red-600 mt-2">
-          {item.price
-            ? `¥${Number(item.price).toLocaleString()}`
-            : "価格未設定"}
+          <p className="text-lg font-bold text-red-600 mt-2">
+  {item.price || "価格未設定"}
         </p>
       </div>
     </div>
