@@ -123,7 +123,7 @@ console.log("TEST");
       : c}
   </option>
 ))}
-            ))}
+          
           </select>
         </label>
 
@@ -211,7 +211,7 @@ console.log("TEST");
     : ""}
 </p>
 
- <p className="text-lg font-bold text-red-600 mt-2">
+ <p className="text-lg font-bold text-black mt-2">
   {item.category === "tire"
     ? "1本価格"
     : item.category === "navi"
