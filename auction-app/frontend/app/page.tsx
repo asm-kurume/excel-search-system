@@ -113,9 +113,16 @@ console.log("TEST");
           
             <option value="">すべて</option>
             {categories.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
+  <option key={c} value={c}>
+    {c === "tire"
+      ? "タイヤ"
+      : c === "navi"
+      ? "ナビ"
+      : c === "others"
+      ? "その他"
+      : c}
+  </option>
+))}
             ))}
           </select>
         </label>
