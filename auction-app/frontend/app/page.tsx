@@ -199,13 +199,12 @@ console.log("TEST");
   </p>
 
   <p>
-  <span className="font-bold">在庫:</span>
-
-  <p>
   <span className="font-bold">状態:</span>
   {item.situation}
 </p>
 
+<p>
+  <span className="font-bold">在庫:</span>
   {item.amount}
   {item.category === "tire"
     ? "本"
