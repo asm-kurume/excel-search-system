@@ -228,7 +228,9 @@ console.log("TEST");
     : item.category === "ホイール"
     ? "1本価格"
     : "価格"}
-  ：{item.price || "価格未設定"}
+  ：{item.price
+  ? `${Number(item.price).toLocaleString()}円`
+  : "価格未設定"}
 </p>
 </div>
     </div>
