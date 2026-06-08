@@ -14,6 +14,7 @@ type Item = {
   year: string;
   amount: string;
   price: string;
+  situation: string;
 };
 
 export default function Home() {
@@ -199,6 +200,12 @@ console.log("TEST");
 
   <p>
   <span className="font-bold">在庫:</span>
+
+  <p>
+  <span className="font-bold">状態:</span>
+  {item.situation}
+</p>
+
   {item.amount}
   {item.category === "tire"
     ? "本"
