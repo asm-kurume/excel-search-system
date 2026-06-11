@@ -191,8 +191,13 @@ console.log("TEST");
   </p>
 
   <p>
-  <span className="font-bold">管理番号:</span>
+  <span className="font-bold">商品コード:</span>
   {item.code}
+</p>
+
+<p>
+  <span className="font-bold">管理番号:</span>
+  {item.store}
 </p>
 
   <p>
