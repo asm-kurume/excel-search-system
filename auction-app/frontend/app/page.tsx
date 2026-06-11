@@ -101,7 +101,9 @@ export default function Home() {
 console.log("TEST");
   return (
     <main>
-      <h1>在庫検索</h1>
+      <h1 className="text-3xl font-bold mb-6">
+  ＡＳＭ久留米　在庫検索
+</h1>
 
       <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
         <label className="text-lg font-bold">
@@ -189,9 +191,9 @@ console.log("TEST");
   </p>
 
   <p>
-    <span className="font-bold">店舗:</span>
-    {item.store}
-  </p>
+  <span className="font-bold">管理番号:</span>
+  {item.code}
+</p>
 
   <p>
     <span className="font-bold">製造:</span>
