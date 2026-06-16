@@ -15,6 +15,7 @@ type Item = {
   amount: string;
   price: string;
   situation: string;
+  remarks: string;
 };
 
 export default function Home() {
@@ -30,14 +31,15 @@ export default function Home() {
     )
       .then((res) => res.text())
       .then((text) => {
-        Papa.parse<Item>(text, {
-          header: true,
-          skipEmptyLines: true,
-          complete: (results) => {
-            console.log("parsed first 3 rows:", results.data.slice(0, 3));
-            setItems(results.data);
-          },
-        });
+       Papa.parse<Item>(text, {
+  header: true,
+  skipEmptyLines: true,
+  complete: (results) => {
+    console.log("parsed first 3 rows:", results.data.slice(0, 3));
+    console.log("ALL DATA:", results.data);
+    setItems(results.data);
+  },
+});
       });
   }, []);
 
@@ -101,7 +103,8 @@ export default function Home() {
 console.log("TEST");
   return (
     <main>
-      <h1 className="text-3xl font-bold mb-6">
+  
+  <h1 className="text-3xl font-bold mb-6">
   ＡＳＭ久留米　在庫検索
 </h1>
 
@@ -170,9 +173,10 @@ console.log("TEST");
 </p>
 
 <div className="grid gap-4">
+
   {filteredItems.map((item, i) => (
     <div
-      key={i}
+      key={`${item.category}-${item.store}-${item.title}`}
       className="border rounded-xl shadow-md p-4 bg-white"
     >
       <h2 className="text-xl font-bold mb-3">
@@ -185,10 +189,12 @@ console.log("TEST");
     {item.maker}
   </p>
 
+  {item.size && (
   <p>
     <span className="font-bold">サイズ:</span>
     {item.size}
   </p>
+)}
 
   <p>
   <span className="font-bold">商品コード:</span>
@@ -200,28 +206,28 @@ console.log("TEST");
   {item.store}
 </p>
 
+ {item.category === "tire" && (
   <p>
     <span className="font-bold">製造:</span>
     {item.year}年 / {item.week}週
   </p>
+)}
 
   <p>
   <span className="font-bold">状態:</span>
   {item.situation}
 </p>
 
+{item.remarks && (
+  <p>
+    <span className="font-bold">備考:</span>
+    {item.remarks}
+  </p>
+)}
+
 <p>
   <span className="font-bold">在庫:</span>
   {item.amount}
-  {item.category === "tire"
-    ? "本"
-    : item.category === "ホイール"
-    ? "本"
-    : item.category === "navi"
-    ? "台"
-    : item.category === "others"
-    ? "個"
-    : ""}
 </p>
 
  <p className="text-lg font-bold text-black mt-2">
@@ -234,9 +240,7 @@ console.log("TEST");
     : item.category === "ホイール"
     ? "1本価格"
     : "価格"}
-  ：{item.price
-  ? `${Number(item.price).toLocaleString()}円`
-  : "価格未設定"}
+  ：{item.price ? `${item.price}円` : "価格未設定"}
 </p>
 </div>
     </div>
