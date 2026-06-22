@@ -19,11 +19,17 @@ type Item = {
 };
 
 export default function Home() {
-  console.log("HOME COMPONENT START");
+  console.log("THIS IS MY PAGE");
+
+  console.log("★★★★★★★★★★★★");
+  console.log("THIS IS MY PAGE");
+  console.log("★★★★★★★★★★★★");
+
   const [items, setItems] = useState<Item[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedMaker, setSelectedMaker] = useState("");
+
 
   // CSV 読み込み
  useEffect(() => {
@@ -200,8 +206,72 @@ return (
 
 <div className="grid gap-4">
   {filteredItems.map((item, i) => (
-    <div key={i}>
-      {item.title}
+    <div
+      key={`${item.category}-${item.store}-${item.title}-${i}`}
+      className="border rounded-xl shadow-md p-4 bg-white"
+    >
+      <h2 className="text-xl font-bold mb-3">
+        {item.title}
+      </h2>
+
+      <div className="space-y-1 text-sm">
+        <p>
+          <span className="font-bold">メーカー：</span>
+          {item.maker}
+        </p>
+
+        {item.size && (
+          <p>
+            <span className="font-bold">サイズ：</span>
+            {item.size}
+          </p>
+        )}
+
+        <p>
+          <span className="font-bold">商品コード：</span>
+          {item.code}
+        </p>
+
+        <p>
+          <span className="font-bold">管理番号：</span>
+          {item.store}
+        </p>
+
+        {item.category === "tire" && (
+          <p>
+            <span className="font-bold">製造：</span>
+            {item.year}年 / {item.week}週
+          </p>
+        )}
+
+        <p>
+          <span className="font-bold">状態：</span>
+          {item.situation}
+        </p>
+
+        {item.remarks && (
+          <p>
+            <span className="font-bold">備考：</span>
+            {item.remarks}
+          </p>
+        )}
+
+        <p>
+          <span className="font-bold">在庫：</span>
+          {item.amount}
+        </p>
+
+        <p className="text-lg font-bold text-black mt-2">
+          {item.category === "tire"
+            ? "1本価格"
+            : item.category === "navi"
+            ? "1台価格"
+            : item.category === "others"
+            ? "1個価格"
+            : "価格"}
+          ：{item.price ? `${item.price}円` : "価格未設定"}
+        </p>
+      </div>
     </div>
   ))}
 </div>
